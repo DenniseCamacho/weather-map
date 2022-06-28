@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <!--    MOBILE VIEW-->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Weather Map</title>
+    <!--    CSS LINK-->
+    <link rel="stylesheet" href="../css/main.css">
+    <!--    BOOTSTRAP LINK-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+
+</head>
+
+<body>
+<main>
+    <!--searchbar-->
+    <section class="searchbarSection">
+        <div><span id="user_display"></span></div>
+        <label for="searchbar" class="text-center mb-2 col-12">Weather Map Search:</label>
+        <input type="text" id="searchbar" placeholder="San Antonio, Texas"
+               class="inputFind mb-3 text-center col-12">
+        <button id="doSearchOnClick" class="buttonFind mb-0 col-12">Search Area</button>
+    </section>
+
+    <!-- holding weather boxes-->
+    <section id="doWrapWeatherDisplay" class="d-grid">
+        <span id="doDisplayWeatherHere"></span>
+    </section>
+    <!--the map-->
+    <div id="map" class="m-auto mt-3 mb-5"></div>
+</main>
+
+<footer>
+    <div id="info"></div>
+    <!--		icons?-->
+    <!--		https://developer.mozilla.org/en-US/docs/Learn/Accessibility/HTML-->
+</footer>
+
+
+<!--SCRIPTS-->
+<section>
+    <!--jQuery-->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <!--BOOTSTRAP-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+            crossorigin="anonymous"></script>
+    <!--mapbox-->
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.7.0/mapbox-gl.js"></script>
+    <script src="../js/mapbox-geocoder-utils.js"></script>
+    <!--    JS-->
+    <script src="../js/main.js"></script>
+    <script src="../js/keys.js"></script>
+</section>
+</body>
+</html>
