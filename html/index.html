@@ -11,21 +11,21 @@
     <!--    BOOTSTRAP LINK-->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
-<!--   MAPBOX-->
-    <link href='https://api.mapbox.com/mapbox-gl-js/v2.7.0/mapbox-gl.css' rel='stylesheet' />
+    <!--   MAPBOX-->
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.7.0/mapbox-gl.css' rel='stylesheet'/>
 </head>
 
 <body>
-<nav class="navbar bg-primary bg-gradient text-light fs-1">WeatherMap</nav>
+<nav class="fs-1 navbar bg-primary bg-gradient text-light">WeatherMap</nav>
 
-<main>
+<main class="mx-auto">
     <!--searchbar-->
     <section class="searchbarSection container mx-auto">
         <div class="row">
-        <label for="searchbar" class="text-center my-2 col-12"><h1>Search Forecast:</h1></label>
-        <input type="text" id="searchbar" placeholder="San Antonio, Texas"
-               class="inputFind text-center col-12 mb-2">
-        <button id="doSearchOnClick" class="buttonFind mb-0 col-12">Search Area</button>
+            <label for="searchbar" class="text-center my-2 col-12"><h1>Search Forecast:</h1></label>
+            <input type="text" id="searchbar" placeholder="San Antonio, Texas"
+                   class="inputFind text-center col-12 mb-2">
+            <button id="doSearchOnClick" class="buttonFind mb-2 col-12">Search Area</button>
         </div>
     </section>
 
@@ -35,15 +35,11 @@
 
         </div>
 
-        <!--the map-->
+        <div id="map" class="overflow-visible"></div>
     </section>
-
-
-
-
+        <!--the map-->
 </main>
 
-<div id="map"></div>
 
 <footer>
     <div id="info"></div>
@@ -54,19 +50,19 @@
 
 <!--SCRIPTS-->
 
-    <!--jQuery-->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
-            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-    <!--BOOTSTRAP-->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
-            crossorigin="anonymous"></script>
-    <!--mapbox-->
-    <script src="https://api.mapbox.com/mapbox-gl-js/v2.7.0/mapbox-gl.js"></script>
-    <script src="../js/mapbox-geocoder-utils.js"></script>
-    <!--    JS-->
-    <script src="../js/main.js"></script>
-    <script src="../js/keys.js"></script>
+<!--jQuery-->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<!--BOOTSTRAP-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+        crossorigin="anonymous"></script>
+<!--mapbox-->
+<script src="https://api.mapbox.com/mapbox-gl-js/v2.7.0/mapbox-gl.js"></script>
+<script src="../js/mapbox-geocoder-utils.js"></script>
+<!--    JS-->
+<script src="../js/main.js"></script>
+<script src="../js/keys.js"></script>
 
 </body>
 </html>
