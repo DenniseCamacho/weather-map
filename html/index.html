@@ -11,27 +11,39 @@
     <!--    BOOTSTRAP LINK-->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
-
+<!--   MAPBOX-->
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.7.0/mapbox-gl.css' rel='stylesheet' />
 </head>
 
 <body>
+<nav class="navbar bg-primary bg-gradient text-light fs-1">WeatherMap</nav>
+
 <main>
     <!--searchbar-->
-    <section class="searchbarSection">
-        <div><span id="user_display"></span></div>
-        <label for="searchbar" class="text-center mb-2 col-12">Weather Map Search:</label>
+    <section class="searchbarSection container mx-auto">
+        <div class="row">
+        <label for="searchbar" class="text-center my-2 col-12"><h1>Search Forecast:</h1></label>
         <input type="text" id="searchbar" placeholder="San Antonio, Texas"
-               class="inputFind mb-3 text-center col-12">
+               class="inputFind text-center col-12 mb-2">
         <button id="doSearchOnClick" class="buttonFind mb-0 col-12">Search Area</button>
+        </div>
     </section>
 
     <!-- holding weather boxes-->
-    <section id="doWrapWeatherDisplay" class="d-grid">
-        <span id="doDisplayWeatherHere"></span>
+    <section id="doWrapWeatherDisplay" class="container">
+        <div id="doDisplayWeatherHere" class="row">
+
+        </div>
+
+        <!--the map-->
     </section>
-    <!--the map-->
-    <div id="map" class="m-auto mt-3 mb-5"></div>
+
+
+
+
 </main>
+
+<div id="map"></div>
 
 <footer>
     <div id="info"></div>
@@ -41,7 +53,7 @@
 
 
 <!--SCRIPTS-->
-<section>
+
     <!--jQuery-->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"
             integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
@@ -55,6 +67,6 @@
     <!--    JS-->
     <script src="../js/main.js"></script>
     <script src="../js/keys.js"></script>
-</section>
+
 </body>
 </html>
