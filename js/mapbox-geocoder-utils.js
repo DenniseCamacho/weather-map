@@ -13,6 +13,7 @@
  *  })
  *
  */
+
 function geocode(search, token) {
 	var baseUrl = 'https://api.mapbox.com';
 	var endPoint = '/geocoding/v5/mapbox.places/';
@@ -21,9 +22,50 @@ function geocode(search, token) {
 			return res.json();
 			// to get all the data from the request, comment out the following three lines...
 		}).then(function(data) {
-			return data.features[0].center;
+			// return data.features[0].center;
+			// return console.log(data.features[0].center);
+
+			let newCoordinates = {
+				lat: '',
+				lng: []
+			};
+			let theCoordinates = data.features[0].center;
+			theCoordinates.forEach((item, index, array)=>{
+				// console.log(index);
+				// console.log(item.toFixed(3));
+				if (index === 0 ) newCoordinates.lat += (item.toFixed(3));
+				if (index === 1 ) newCoordinates.lng.push(item.toFixed(3));
+			});
+
+			return newCoordinates;
+
 		});
 }
+
+// function geocode(search, token) {
+// 	let baseUrl = 'https://api.mapbox.com';
+// 	let endPoint = '/geocoding/v5/mapbox.places/';
+// 	return fetch(baseUrl + endPoint + encodeURIComponent(search) + '.json' + "?" + 'access_token=' + token)
+// 		.then(function(res) {
+// 			return res.json();
+// 			// to get all the data from the request, comment out the following three lines...
+// 		}).then(function(data) {
+//
+// 			return data.features[0].center;
+//
+// 			// return console.log(data.features[0].center);
+// 			// let theCoordinates = data.features[0].center;
+// 			// theCoordinates.forEach((item, index, array)=>{
+// 			// 	// console.log(index);
+// 			// 	console.log(item.toFixed(3));
+// 			// });
+//
+// 			// function doAddNewCoordinates(){
+// 			// 	//take the coordinates of the weather map,
+// 			// 	// place them in map, }
+//
+// 		});
+// }
 
 
 /***
@@ -40,14 +82,16 @@ function geocode(search, token) {
  *
  */
 function reverseGeocode(coordinates, token) {
-	var baseUrl = 'https://api.mapbox.com';
-	var endPoint = '/geocoding/v5/mapbox.places/';
+	let baseUrl = 'https://api.mapbox.com';
+	let endPoint = '/geocoding/v5/mapbox.places/';
 	return fetch(baseUrl + endPoint + coordinates.lng + "," + coordinates.lat + '.json' + "?" + 'access_token=' + token)
 		.then(function(res) {
 			return res.json();
 		})
 		// to get all the data from the request, comment out the following three lines...
 		.then(function(data) {
-			return data.features[0].place_name;
+			// return data.features[0].place_name;
+			 return console.log(data.features[0].place_name);
 		});
+
 }
