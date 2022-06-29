@@ -2,41 +2,99 @@
 
 $(document).ready(function () {
 
+    mapboxgl.accessToken = MAPBOX_API_TOKEN;
+    const map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/mapbox/streets-v11',
+        center: [-98.4936, 31.4241],
+        zoom: 5
+    });
+
+    let div1 = `<div class="col-12 col-md-2 col-lg-2">`;
+    let divEnd = `</div>`
+
+    let weatherCoordinates = [
+        29.4252,
+        -98.4916
+    ];
+
+
     $.get('https://api.openweathermap.org/data/2.5/onecall', {
-        lat: 29.4252,
-        lon: -98.4916,
+        lat: weatherCoordinates[0],
+        lon: weatherCoordinates[1],
         appid: WEATHER_TOKEN,
         exclude: 'minutely,hourly,current,alerts',
         units: 'imperial'
     }).done(function (data) {
-        // console.log(data);
-        for (let i = 0; i < 5; i++) {
-            // console.log(data.daily[i]);
-            let temperature_min     = data.daily[i].temp.min;
-            let temperature_max     = data.daily[i].temp.max;
-            let weather_date        = Date(data.daily[i].dt);
-            let weather_description = data.daily[i].weather[0].description
-            let weather_humidity    = data.daily[i].humidity;
-            let weather_wind        = data.daily[i].wind_speed;
-            let weather_pressure    = data.daily[i].pressure;
+       console.log(data.daily.forEach((item, index, array)=>{
+           console.log(item.weather[0].description);
 
-            let weatherContainers = document.getElementById('doDisplayWeatherHere');
-            weatherContainers.innerHTML += `
-                        ${weather_date} <br>
-                      ${temperature_min}<br>
-                      ${temperature_max}<br>
-                      ${weather_description}<br>
-                      ${weather_humidity}<br>
-                      ${weather_wind}<br>
-                      ${weather_pressure}
+           if (index <= 5) {
+               let w_date = new Date(item.dt);
+               let w_tempMin = item.temp.min;
+               let w_tempMax = item.temp.max;
+               let w_Description = item.weather[0].description;
+               let w_Humidity = item.humidity;
+               let w_Wind = item.wind_speed;
+               let w_Pressure = item.pressure;
 
+
+               let weatherContainers = document.getElementById('doDisplayWeatherHere');
+               weatherContainers.innerHTML += `
+           ${div1}
+           ${w_date}
+           ${w_tempMin}
+           ${w_tempMax}
+           ${w_Description}
+           ${w_Humidity}
+           ${w_Wind}
+           ${w_Pressure}
+           ${divEnd}
            `
-        }
+           }
+       }));
+        // console.log(data);
+        // for (let i = 0; i < 6; i++) {
+        //     console.log(data);
+        //     let temperature_min = data.daily[i].temp.min;
+        //     let temperature_max = data.daily[i].temp.max;
+        //     let weather_date = Date(data.daily[i].dt);
+        //     let weather_description = data.daily[i].weather.description
+        //     let weather_humidity = data.daily[i].humidity;
+        //     let weather_wind = data.daily[i].wind_speed;
+        //     let weather_pressure = data.daily[i].pressure;
+        //
+        //     let weatherContainers = document.getElementById('doDisplayWeatherHere');
+        //     weatherContainers.innerHTML += `
+        //               <div class="col-sm-12 col-md-4 col-lg-2 text-center mt-3">
+        //                 <h3 class="bg-light">${weather_date}</h3>
+        //               <label for=""></label>${temperature_min}<br>
+        //               <label for=""></label>${temperature_max}<br>
+        //               <label for="">
+        //               Description:
+        //               </label> ${weather_description}<br>
+        //               <details class="">
+        //               <label for=""></label>${weather_humidity}<br>
+        //               <label for=""></label>${weather_wind}<br>
+        //               <label for=""></label>${weather_pressure}
+        //               </details>
+        //               </div>
+        //
+        //    `
+        // }
     }).fail(function (jqXhr, status, error) {
         console.log(jqXhr);
         console.log(status);
         console.log(error);
     });
+
+    // mapboxgl.accessToken = MAPBOX_API_TOKEN;
+    // const map = new mapboxgl.Map({
+    //     container: 'map', // container ID
+    //     style: 'mapbox://styles/mapbox/streets-v11', // style URL
+    //     center: [-98.4916, 29.4252], // starting position [lng, lat]
+    //     zoom: 9 // starting zoom
+    // });
 
     // "use strict";
     // $('#clickme').onclick(function () {
