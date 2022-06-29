@@ -4,7 +4,7 @@ $(document).ready(function () {
     mapboxgl.accessToken = MAPBOX_API_TOKEN;
     const map = new mapboxgl.Map({
         container: 'map', // container ID
-        center: [-122.420679, 37.772537], // starting position [lng, lat]
+        center: [29.424, -98.493], // starting position [lng, lat]
         zoom: 13, // starting zoom
         style: 'mapbox://styles/mapbox/streets-v11', // style URL or style object
         hash: true
@@ -26,8 +26,19 @@ $(document).ready(function () {
                 console.log('I\'ve been clicked!');
                 let theUsersSearchText = theSearchBar.value;
 
-               let theCoordinates = geocode(theUsersSearchText, MAPBOX_API_TOKEN); //returns coordinates
-                console.log(theCoordinates);
+              geocode(theUsersSearchText, MAPBOX_API_TOKEN).then((coordinateResults)=>{
+                  console.log(coordinateResults);
+                  reverseGeocode(coordinateResults, MAPBOX_API_TOKEN).then((placeResults)=>{
+                      console.log(placeResults);
+                     let thespan = document.getElementById('doDisplayInformationHere');
+                     thespan.innerText +=
+                         `
+                         ${placeResults}
+                         
+                         `
+                  })
+
+                  }); //returns coordinates
 
                 // reverseGeocode(theCoordinates, MAPBOX_API_TOKEN);
             });
