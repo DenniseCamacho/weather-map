@@ -1,7 +1,5 @@
 "use strict";
 $(document).ready(function () {
-
-
     $.get('https://api.openweathermap.org/data/2.5/onecall', {
         lat: 29.4252,
         lon: -98.4916,
@@ -94,7 +92,73 @@ const userSetsCoordinates = {
             geocode(theUsersSearchText, MAPBOX_API_TOKEN)
                 .then((coordinateResults) => {
                     console.log(coordinateResults);
-                    //[] - what to do with the coordinates...
+                    //what to do with the coordinates...
+                    //use the users coordinates to set lat, lng on api call THEN
+                    $.get('https://api.openweathermap.org/data/2.5/onecall', {
+                        lat: coordinateResults.lat,
+                        lon: coordinateResults.lng,
+                        appid: WEATHER_TOKEN,
+                        exclude: 'minutely,hourly,current,alerts',
+                        units: 'imperial'
+                    }).done(function (data) {
+                        //[]with this new data, replace the forecast content.
+                        // console.log(data);
+                        //WITH THE WEATHER DATA FROM THE API CALL, REPLACE THE DATA.
+                       let doGrabOldWeatherInfo = document.getElementById('doDisplayWeatherHere');
+                       doGrabOldWeatherInfo.remove();
+                       let doGrabWeatherWrapContainer = document.getElementById('doWrapWeatherDisplay');
+                       let doCreateNewDisplayDiv = document.createElement("div");
+                       doGrabWeatherWrapContainer.prepend(doCreateNewDisplayDiv);
+
+           //              const weatherContainers = {
+           //                  doMakeWeatherContainers : function () {
+           //                      let divStart = `<div class="col-12 col-md-6 col-lg-2 text-center pb-2">`;
+           //                      let divEnd = `</div>`
+           //                      //RUN THROUGH WEATHER DATA, DISPLAYING EACH ITEM IN OBJECT
+           //                      data.daily.forEach((item, index, array) => {
+           //                          // console.log(item.weather[0].icon);
+           //                          // console.log(item.weather[0].description);
+           //                          //DISPLAY FORECAST FOR 6 DAYS
+           //                          if (index <= 5) {
+           //                              let weatherIcon = item.weather[0].icon
+           //                              //CONVERTING TO UNIX TIME:
+           //                              let unixTime = item.dt;
+           //                              let w_date = new Date(unixTime * 1000);
+           //                              let w_date2 = w_date.toLocaleString("en-US");
+           //                              let w_date3 = w_date2.split(',').join('');
+           //                              let w_tempMin = item.temp.min;
+           //                              let w_tempMax = item.temp.max;
+           //                              let w_Description = item.weather[0].description;
+           //                              let w_Humidity = item.humidity;
+           //                              let w_Wind = item.wind_speed;
+           //                              let w_Pressure = item.pressure;
+           //                              //GET THE ELEMENT WITH THE ID OF 'doDisplayWeatherHere'
+           //                              let weatherContainers = document.getElementById('doDisplayWeatherHere');
+           //                              //MAKE ELEMENTS IN THAT ELEMENT
+           //                              weatherContainers.innerHTML += `
+           // ${divStart}
+           // <h1 class="fs-5 text-break bg-light">${w_date3}</h1>
+           // <img src="http://openweathermap.org/img/wn/${weatherIcon}@2x.png" alt="${w_Description}"><br>
+           // ${w_tempMin}/
+           // ${w_tempMax}<br>
+           // ${w_Description}<br>
+           // <details class="bg-light">
+           // Humidity: ${w_Humidity}<br>
+           // Wind: ${w_Wind}<br>
+           // Pressure: ${w_Pressure}
+           // </details>
+           // ${divEnd}
+           // `
+           //                          )} //-if end
+           //                      }); //-foreach end
+           //                  }
+           //              }
+           //              weatherContainers.doMakeWeatherContainers(data);
+                    }).fail(function (jqXhr, status, error) {
+                        console.log(jqXhr, 'is jqxhr');
+                        console.log(status, 'is status');
+                        console.log(error, 'is error');
+                    });
                     // console.log(coordinateResults);
                     // console.log(coordinateResults.lat, 'is lat');
                     // console.log(coordinateResults.lng, 'is lng');
