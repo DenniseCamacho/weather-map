@@ -1,39 +1,32 @@
 "use strict";
 $(document).ready(function () {
-    $.get('https://api.openweathermap.org/data/2.5/onecall', {
-        lat: 29.4252,
-        lon: -98.4916,
-        appid: WEATHER_TOKEN,
-        exclude: 'minutely,hourly,current,alerts',
-        units: 'imperial'
-    }).done(function (data) {
-        //WITH THE WEATHER DATA FROM THE API CALL, DISPLAY THE DATA.
-        const weatherContainers = {
-           doMakeWeatherContainers : function () {
-               let divStart = `<div class="col-12 col-md-6 col-lg-2 text-center pb-2">`;
-               let divEnd = `</div>`
-               //RUN THROUGH WEATHER DATA, DISPLAYING EACH ITEM IN OBJECT
-               data.daily.forEach((item, index, array) => {
-                   // console.log(item.weather[0].icon);
-                   // console.log(item.weather[0].description);
-                   //DISPLAY FORECAST FOR 6 DAYS
-                   if (index <= 5) {
-                       let weatherIcon = item.weather[0].icon
-                       //CONVERTING TO UNIX TIME:
-                       let unixTime = item.dt;
-                       let w_date = new Date(unixTime * 1000);
-                       let w_date2 = w_date.toLocaleString("en-US");
-                       let w_date3 = w_date2.split(',').join('');
-                       let w_tempMin = item.temp.min;
-                       let w_tempMax = item.temp.max;
-                       let w_Description = item.weather[0].description;
-                       let w_Humidity = item.humidity;
-                       let w_Wind = item.wind_speed;
-                       let w_Pressure = item.pressure;
-                       //GET THE ELEMENT WITH THE ID OF 'doDisplayWeatherHere'
-                       let weatherContainers = document.getElementById('doDisplayWeatherHere');
-                       //MAKE ELEMENTS IN THAT ELEMENT
-                       weatherContainers.innerHTML += `
+    const weatherContainers = {
+        doMakeWeatherContainers : function (data) {
+            let divStart = `<div class="col-12 col-md-6 col-lg-2 text-center pb-2">`;
+            let divEnd = `</div>`
+            //RUN THROUGH WEATHER DATA, DISPLAYING EACH ITEM IN OBJECT
+            data.daily.forEach((item, index, array) => {
+                // console.log(item.weather[0].icon);
+                // console.log(item.weather[0].description);
+                //DISPLAY FORECAST FOR 6 DAYS
+                if (index <= 5) {
+                    let weatherIcon = item.weather[0].icon
+                    //CONVERTING TO UNIX TIME:
+                    let unixTime = item.dt;
+                    let w_date = new Date(unixTime * 1000);
+                    let w_date2 = w_date.toLocaleString("en-US");
+                    let w_date3 = w_date2.split(',').join('');
+                    let w_tempMin = item.temp.min;
+                    let w_tempMax = item.temp.max;
+                    let w_Description = item.weather[0].description;
+                    let w_Humidity = item.humidity;
+                    let w_Wind = item.wind_speed;
+                    let w_Pressure = item.pressure;
+                    //GET THE ELEMENT WITH THE ID OF 'doDisplayWeatherHere'
+                    let weatherContainers = document.getElementById('doDisplayWeatherHere');
+                    //MAKE ELEMENTS IN THAT ELEMENT
+                    weatherContainers.insertAdjacentHTML( "afterbegin", `
+                
            ${divStart}
            <h1 class="fs-5 text-break bg-light">${w_date3}</h1>
            <img src="http://openweathermap.org/img/wn/${weatherIcon}@2x.png" alt="${w_Description}"><br>
@@ -46,12 +39,27 @@ $(document).ready(function () {
            Pressure: ${w_Pressure}
            </details>
            ${divEnd}
-           ` //tic
-                   } //-if end
-               }); //-foreach end
-           }
-       }
+                      
+           
+           ` )//tic
+                } //-if end
+            }); //-foreach end
+        }
+    }
+    //with creating this function,
+    //the issue was that it didn't get rid of the old information, it just kept creating new information.
+    //BUT, I do not want to create new containers with every click, so how would i prevent that...
+
+    $.get('https://api.openweathermap.org/data/2.5/onecall', {
+        lat: 29.4252,
+        lon: -98.4916,
+        appid: WEATHER_TOKEN,
+        exclude: 'minutely,hourly,current,alerts',
+        units: 'imperial'
+    }).done(function (data) {
+        //with this data, execute this function.
        weatherContainers.doMakeWeatherContainers(data);
+
     }).fail(function (jqXhr, status, error) {
         console.log(jqXhr);
         console.log(status);
@@ -74,6 +82,7 @@ let marker = new mapboxgl.Marker({
     .addTo(map);
 
 
+//with the searchbar, invoke the function
 const userSetsCoordinates = {
     doSetCoordinates: function () {
         //GRAB THE SEARCHBAR BY ID
@@ -104,56 +113,19 @@ const userSetsCoordinates = {
                         //[]with this new data, replace the forecast content.
                         // console.log(data);
                         //WITH THE WEATHER DATA FROM THE API CALL, REPLACE THE DATA.
-                       let doGrabOldWeatherInfo = document.getElementById('doDisplayWeatherHere');
-                       doGrabOldWeatherInfo.remove();
-                       let doGrabWeatherWrapContainer = document.getElementById('doWrapWeatherDisplay');
-                       let doCreateNewDisplayDiv = document.createElement("div");
-                       doGrabWeatherWrapContainer.prepend(doCreateNewDisplayDiv);
-
-           //              const weatherContainers = {
-           //                  doMakeWeatherContainers : function () {
-           //                      let divStart = `<div class="col-12 col-md-6 col-lg-2 text-center pb-2">`;
-           //                      let divEnd = `</div>`
-           //                      //RUN THROUGH WEATHER DATA, DISPLAYING EACH ITEM IN OBJECT
-           //                      data.daily.forEach((item, index, array) => {
-           //                          // console.log(item.weather[0].icon);
-           //                          // console.log(item.weather[0].description);
-           //                          //DISPLAY FORECAST FOR 6 DAYS
-           //                          if (index <= 5) {
-           //                              let weatherIcon = item.weather[0].icon
-           //                              //CONVERTING TO UNIX TIME:
-           //                              let unixTime = item.dt;
-           //                              let w_date = new Date(unixTime * 1000);
-           //                              let w_date2 = w_date.toLocaleString("en-US");
-           //                              let w_date3 = w_date2.split(',').join('');
-           //                              let w_tempMin = item.temp.min;
-           //                              let w_tempMax = item.temp.max;
-           //                              let w_Description = item.weather[0].description;
-           //                              let w_Humidity = item.humidity;
-           //                              let w_Wind = item.wind_speed;
-           //                              let w_Pressure = item.pressure;
-           //                              //GET THE ELEMENT WITH THE ID OF 'doDisplayWeatherHere'
-           //                              let weatherContainers = document.getElementById('doDisplayWeatherHere');
-           //                              //MAKE ELEMENTS IN THAT ELEMENT
-           //                              weatherContainers.innerHTML += `
-           // ${divStart}
-           // <h1 class="fs-5 text-break bg-light">${w_date3}</h1>
-           // <img src="http://openweathermap.org/img/wn/${weatherIcon}@2x.png" alt="${w_Description}"><br>
-           // ${w_tempMin}/
-           // ${w_tempMax}<br>
-           // ${w_Description}<br>
-           // <details class="bg-light">
-           // Humidity: ${w_Humidity}<br>
-           // Wind: ${w_Wind}<br>
-           // Pressure: ${w_Pressure}
-           // </details>
-           // ${divEnd}
-           // `
-           //                          )} //-if end
-           //                      }); //-foreach end
-           //                  }
-           //              }
-           //              weatherContainers.doMakeWeatherContainers(data);
+                       // let doGrabOldWeatherInfo = document.getElementById('doDisplayWeatherHere');
+                       // doGrabOldWeatherInfo.innerHTML = '';
+                       // let doGrabWeatherWrapContainer = document.getElementById('doWrapWeatherDisplay');
+                       // let doCreateNewDisplayDiv = document.createElement("div");
+                       // doGrabWeatherWrapContainer.prepend(doCreateNewDisplayDiv);
+                       //after thinking this through...
+                        //itll create a new div every click...
+                       //but then, if 'doDisplayWeatherHere' ID is removed, how would this work again?
+                        //so this would only work once...
+                        //unless I add the ID name to the new element again...
+                        weatherContainers.doMakeWeatherContainers(data);
+                        //this is making new containers with the data,
+                        //but, I want it to replace the containers
                     }).fail(function (jqXhr, status, error) {
                         console.log(jqXhr, 'is jqxhr');
                         console.log(status, 'is status');
