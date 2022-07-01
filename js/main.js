@@ -1,7 +1,7 @@
 "use strict";
 $(document).ready(function () {
     const weatherContainers = {
-        doMakeWeatherContainers : function (data) {
+        doMakeWeatherContainers: function (data) {
             let divStart = `<div class="col-12 col-md-6 col-lg-2 text-center pb-2">`;
             let divEnd = `</div>`
             //RUN THROUGH WEATHER DATA, DISPLAYING EACH ITEM IN OBJECT
@@ -25,7 +25,8 @@ $(document).ready(function () {
                     //GET THE ELEMENT WITH THE ID OF 'doDisplayWeatherHere'
                     let weatherContainers = document.getElementById('doDisplayWeatherHere');
                     //MAKE ELEMENTS IN THAT ELEMENT
-                    weatherContainers.insertAdjacentHTML( "afterbegin", `
+                    //https://developer.mozilla.org/en-US/docs/Web/API/Element/insertAdjacentHTML
+                    weatherContainers.insertAdjacentHTML("beforeend", `
                 
            ${divStart}
            <h1 class="fs-5 text-break bg-light">${w_date3}</h1>
@@ -41,14 +42,54 @@ $(document).ready(function () {
            ${divEnd}
                       
            
-           ` )//tic
+           `)//tic
                 } //-if end
             }); //-foreach end
         }
     }
-    //with creating this function,
-    //the issue was that it didn't get rid of the old information, it just kept creating new information.
-    //BUT, I do not want to create new containers with every click, so how would i prevent that...
+    const userSetsCoordinates = {
+        doSetCoordinates: function () {
+            //GRAB THE SEARCHBAR BY ID
+            let theSearchBar = document.getElementById('searchbar');
+            //GRAB THE BUTTON BY ID
+            let theSearchButton = document.getElementById('doSearchOnClick');
+            //ADD A FUNCTION TO EXECUTE UPON CLICKING TO THE BUTTON
+            theSearchButton.addEventListener('click', (e) => {
+                //PREVENT REFRESH
+                e.preventDefault();
+                //CHECK IF EVENT IS FUNCTIONING CORRECT.
+                console.log('I\'ve been clicked!');
+                //GRAB THE USERS TEXT IN THE SEARCHBAR
+                let theUsersSearchText = theSearchBar.value;
+                //  GEOCODE RETURNS THE COORDINATES.
+                geocode(theUsersSearchText, MAPBOX_API_TOKEN)
+                    .then((coordinateResults) => {
+                        console.log(coordinateResults);
+                        //what to do with the coordinates...
+                        //use the users coordinates to set lat, lng on api call THEN
+                        $.get('https://api.openweathermap.org/data/2.5/onecall', {
+                            lat: coordinateResults.lat,
+                            lon: coordinateResults.lng,
+                            appid: WEATHER_TOKEN,
+                            exclude: 'minutely,hourly,current,alerts',
+                            units: 'imperial'
+                        }).done(function (data) {
+                            //CLEARS CURRENT CONTENT :)
+                            let currentForecast = document.getElementById('doDisplayWeatherHere');
+                            currentForecast.innerHTML = '';
+                            //THEN MAKES THE CONTAINERS
+                            weatherContainers.doMakeWeatherContainers(data);
+                        }).fail(function (jqXhr, status, error) {
+                            console.log(jqXhr, 'is jqxhr');
+                            console.log(status, 'is status');
+                            console.log(error, 'is error');
+                        });
+                    })//end of .then
+            }); // end of event listener
+        }//end of doSetCoordinates
+    }//end of userSetsCoordinates
+    userSetsCoordinates.doSetCoordinates();
+
 
     $.get('https://api.openweathermap.org/data/2.5/onecall', {
         lat: 29.4252,
@@ -58,136 +99,37 @@ $(document).ready(function () {
         units: 'imperial'
     }).done(function (data) {
         //with this data, execute this function.
-       weatherContainers.doMakeWeatherContainers(data);
-
+        //(make the containers)
+        weatherContainers.doMakeWeatherContainers(data);
     }).fail(function (jqXhr, status, error) {
         console.log(jqXhr);
         console.log(status);
         console.log(error);
     });
 
-mapboxgl.accessToken = MAPBOX_API_TOKEN;
-let map = new mapboxgl.Map({
-    container: 'map', // container ID
-    center: [-98.493, 29.424], // starting position [lng, lat]
-    zoom: 13, // starting zoom
-    style: 'mapbox://styles/mapbox/streets-v11', // style URL or style object
-    hash: true
-});
+    mapboxgl.accessToken = MAPBOX_API_TOKEN;
+    let map = new mapboxgl.Map({
+        container: 'map', // container ID
+        center: [-98.493, 29.424], // starting position [lng, lat]
+        zoom: 13, // starting zoom
+        style: 'mapbox://styles/mapbox/streets-v11', // style URL or style object
+        hash: true
+    });
 //DEFAULT MARKER IN SAN ANTONIO
-let marker = new mapboxgl.Marker({
-    draggable: true
-})
-    .setLngLat([-98.491, 29.425])
-    .addTo(map);
-
-
-//with the searchbar, invoke the function
-const userSetsCoordinates = {
-    doSetCoordinates: function () {
-        //GRAB THE SEARCHBAR BY ID
-        let theSearchBar = document.getElementById('searchbar');
-        //GRAB THE BUTTON BY ID
-        let theSearchButton = document.getElementById('doSearchOnClick');
-        //ADD A FUNCTION TO EXECUTE UPON CLICKING TO THE BUTTON
-        theSearchButton.addEventListener('click', (e) => {
-            //PREVENT REFRESH
-            e.preventDefault();
-            //CHECK IF EVENT IS FUNCTIONING CORRECT.
-            console.log('I\'ve been clicked!');
-            //GRAB THE USERS TEXT IN THE SEARCHBAR
-            let theUsersSearchText = theSearchBar.value;
-            //  GEOCODE RETURNS THE COORDINATES.
-            geocode(theUsersSearchText, MAPBOX_API_TOKEN)
-                .then((coordinateResults) => {
-                    console.log(coordinateResults);
-                    //what to do with the coordinates...
-                    //use the users coordinates to set lat, lng on api call THEN
-                    $.get('https://api.openweathermap.org/data/2.5/onecall', {
-                        lat: coordinateResults.lat,
-                        lon: coordinateResults.lng,
-                        appid: WEATHER_TOKEN,
-                        exclude: 'minutely,hourly,current,alerts',
-                        units: 'imperial'
-                    }).done(function (data) {
-                        //[]with this new data, replace the forecast content.
-                        // console.log(data);
-                        //WITH THE WEATHER DATA FROM THE API CALL, REPLACE THE DATA.
-                       // let doGrabOldWeatherInfo = document.getElementById('doDisplayWeatherHere');
-                       // doGrabOldWeatherInfo.innerHTML = '';
-                       // let doGrabWeatherWrapContainer = document.getElementById('doWrapWeatherDisplay');
-                       // let doCreateNewDisplayDiv = document.createElement("div");
-                       // doGrabWeatherWrapContainer.prepend(doCreateNewDisplayDiv);
-                       //after thinking this through...
-                        //itll create a new div every click...
-                       //but then, if 'doDisplayWeatherHere' ID is removed, how would this work again?
-                        //so this would only work once...
-                        //unless I add the ID name to the new element again...
-                        weatherContainers.doMakeWeatherContainers(data);
-                        //this is making new containers with the data,
-                        //but, I want it to replace the containers
-                    }).fail(function (jqXhr, status, error) {
-                        console.log(jqXhr, 'is jqxhr');
-                        console.log(status, 'is status');
-                        console.log(error, 'is error');
-                    });
-                    // console.log(coordinateResults);
-                    // console.log(coordinateResults.lat, 'is lat');
-                    // console.log(coordinateResults.lng, 'is lng');
-                })
-        });
-    }
-}
-userSetsCoordinates.doSetCoordinates();
+    let marker = new mapboxgl.Marker({
+        draggable: true
+    })
+        .setLngLat([-98.491, 29.425])
+        .addTo(map);
 });
 
 
-
+//[] adjust map marker to change based on search value.
+//[] adjust forecast to change based on map marker coordinates.
 //[x] display 5-day forecast on window
 //[x] display map on window
 //[x] display map marker on map
-//[] adjust map marker to coordinates given on search value.
-//[] adjust forecast to display map marker coordinates.
-//[] adjust forecast to display search value coordinates.
-//[] take the coordinate from the users search value and
+//[x] adjust forecast to display search value coordinates.
+//[x] take the coordinate from the users search value,
 // place them in the get request to display data from users search value.
 
-        // const weatherForecastSearch = {
-        // //FUNCTION FOR THE SEARCHBAR.
-        //     doSearchForecast : function (){
-        //     //GRAB THE SEARCHBAR BY ID
-        //     let theSearchBar = document.getElementById('searchbar');
-        //     //GRAB THE BUTTON BY ID
-        //     let theSearchButton = document.getElementById('doSearchOnClick');
-        //     //ADD A FUNCTION TO EXECUTE UPON CLICKING TO THE BUTTON
-        //     theSearchButton.addEventListener('click', (e)=>{
-        //         //PREVENT REFRESH
-        //         e.preventDefault();
-        //         //CHECK IF EVENT IS FUNCTIONING CORRECT.
-        //         console.log('I\'ve been clicked!');
-        //         //GRAB THE USERS TEXT IN THE SEARCHBAR
-        //         let theUsersSearchText = theSearchBar.value;
-        //       //  GEOCODE RETURNS THE COORDINATES.
-        //       geocode(theUsersSearchText, MAPBOX_API_TOKEN)
-        //           .then((coordinateResults)=>{
-        //           console.log(coordinateResults);
-        //           console.log(coordinateResults.lat, 'is lat');
-        //           console.log(coordinateResults.lng, 'is lng');
-        //           //WITH THE COORDINATES, MAY NOW USE REVERSEGEOCODE METHOD TO GET ADDRESS.
-        //           reverseGeocode(coordinateResults, MAPBOX_API_TOKEN)
-        //               .then((placeResults)=>{
-        //               console.log(placeResults);
-        //              let thespan = document.getElementById('doDisplayInformationHere');
-        //              thespan.innerText +=
-        //                  `
-        //                  ${placeResults}
-        //
-        //                  `
-        //           }) // END OF THEN
-        //           }); //END OF THEN
-        //     }); // END OF SEARCH BUTTON CLICK EVENT.
-        // }
-        // //
-        //
-        // }
-        // weatherForecastSearch.doSearchForecast();
